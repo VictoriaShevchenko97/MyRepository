@@ -1,0 +1,43 @@
+include layout/header.pug
+script(src='jsb/auth.js')
+script.
+	Ext.Loader.setConfig({
+	enabled:true,
+	disableCaching:false
+	});
+	Ext.require('Ext.window.MessageBox');
+	var panel=new Ext.form.Panel({
+		id:'panelId',renderTo:document.body,
+		title:'Autorization',bodyPadding:10,
+		resizable:true,width:'400px',
+		closable:false,modal:true,padding:10,
+		iconCls:'nav',centered:true,
+		
+		items:[
+			{xtype:'textfield',itemId:'login',title:'Login',region:'center',maxLength:15,minLength:3,fieldLabel:'Login',
+			scale:'medium'},
+
+			{xtype:'textfield',
+			inputType:'password',
+			name:'password',
+			fieldLabel:'Password'}
+		],
+		buttons:[{
+		//Atoolbarbuttonwithopenwindowhandler
+			text:'Send',
+			scope:this,
+			handler:function(){
+				Ext.Msg.alert('Title', 'The quick brown fox jumped over the lazy dog.', Ext.emptyFn);
+		}
+		}]
+	});
+	Ext.getCmp('panelId').center();
+	window.onresize=function(){
+	Ext.getCmp('panelId').center();
+	}
+blockcontent
+
+
+
+
+

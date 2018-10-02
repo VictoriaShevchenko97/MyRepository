@@ -1,0 +1,24 @@
+{
+  "name": "app",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "ext": "^0.6.1",
+    "extjs": "^0.1.0",
+    "http-errors": "~1.6.2",
+    "morgan": "~1.9.0",
+    "mysql": "^2.16.0",
+    "node-extjs": "^1.0.1",
+    "node-static": "^0.7.11",
+    "nodemon": "^1.18.4",
+    "pug": "^2.0.0-beta11",
+    "sencha-cmd": "^0.1.4"
+  }
+}

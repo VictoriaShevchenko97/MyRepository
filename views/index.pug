@@ -1,0 +1,16 @@
+include layout/header.pug
+
+block content
+	h1= title
+	p Welcome to #{title}
+	form(action='/auth' method='post')
+		div(class='form-group')
+			label(for='example') Email
+			input(type='email' name='email' id='example')
+		div(class='form-group')
+			label(for='example2') Password
+			input(type='password' name='pass' id='example2')
+			input(type='submit' value='Send')
+
+	
+
