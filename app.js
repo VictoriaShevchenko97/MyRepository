@@ -1,3 +1,4 @@
+
 var core =require('./jsb/core.js')();
 global.app=core.express();
 global.app.core=core;
