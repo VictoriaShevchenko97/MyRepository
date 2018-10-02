@@ -1,9 +1,11 @@
 
 var core =require('./jsb/core.js')();
+
 global.app=core.express();
 global.app.core=core;
 
 global.app.mod={};
+global.app.core.http.createServer();
 app.set("view engine", "pug");
 app.set("views", app.core.path.join(__dirname, "views"));
 
@@ -19,7 +21,9 @@ app.get('/',function (req,res) {
 console.log(app.mod['result']['result'][0]);
 	// body...
 });
-var auth =require('./jsb/auth.js');
+app.post('/',(res,req)=>{
+	console.log(req.body);
+})
 var models = {
     Auth: require('./jsb/auth')
 };
@@ -27,5 +31,14 @@ app.post('/auth',urlencoded,function (req,res) {
 	if(!req.body)return res.sendStatus(400);
 	res.render("auth",{title:"fddsds",data:req.body});
 })
+
+var httpserver = core.http.createServer(app);
+//global.app.httpindex=require('./routes/index')(app);
+global.app.set('views', core.path.join(__dirname, 'views'));
+global.app.set('view engine', 'pug');
+global.app.set('dir_public', __dirname);
+
+global.app.use(global.app.core.bodyParser.urlencoded({limit: '25mb', extended: false }));
+
 app.listen(3000);
 module.exports = app;

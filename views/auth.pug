@@ -1,5 +1,5 @@
 include layout/header.pug
-script(src='jsb/auth.js')
+
 script.
 	Ext.Loader.setConfig({
 	enabled:true,
@@ -9,25 +9,35 @@ script.
 	var panel=new Ext.form.Panel({
 		id:'panelId',renderTo:document.body,
 		title:'Autorization',bodyPadding:10,
-		resizable:true,width:'400px',
+		resizable:false,width:'400px',
 		closable:false,modal:true,padding:10,
 		iconCls:'nav',centered:true,
-		
+		method:"post",
 		items:[
 			{xtype:'textfield',itemId:'login',title:'Login',region:'center',maxLength:15,minLength:3,fieldLabel:'Login',
-			scale:'medium'},
+			scale:'medium',allowBlank: false},
 
 			{xtype:'textfield',
 			inputType:'password',
 			name:'password',
-			fieldLabel:'Password'}
+			fieldLabel:'Password',allowBlank: false}
 		],
 		buttons:[{
-		//Atoolbarbuttonwithopenwindowhandler
 			text:'Send',
 			scope:this,
+			formBind: true, //only enabled once the form is valid
+			disabled: true,
 			handler:function(){
-				Ext.Msg.alert('Title', 'The quick brown fox jumped over the lazy dog.', Ext.emptyFn);
+				panel.getForm().submit({
+					
+					success:function(form,action){
+						Ext.MessageBox.alert('Авторизация пройдена');	
+					},
+					 failure: function(form, action){ 
+						Ext.MessageBox.alert('Ошибка авторизации');
+					}
+
+				});
 		}
 		}]
 	});
