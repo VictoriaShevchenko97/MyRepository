@@ -15,9 +15,9 @@ var core={
 	url:require('url'),
 	pug:require('pug'),
 	sql:require('mysql'),
-	http:require('http'),
-	
+	http:require('http'),	
 	bodyParser:require('body-parser'),
-	static:require('node-static')
+	static:require('node-static'),
+	ws:require('ws')
 }
 

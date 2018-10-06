@@ -1,6 +1,7 @@
 include layout/header.pug
 
 script.
+	
 	Ext.Loader.setConfig({
 	enabled:true,
 	disableCaching:false
@@ -11,8 +12,8 @@ script.
 		title:'Autorization',bodyPadding:10,
 		resizable:false,width:'400px',
 		closable:false,modal:true,padding:10,
-		iconCls:'nav',centered:true,
-		method:"post",
+		iconCls:'nav',centered:true,action:"/auth",
+		
 		items:[
 			{xtype:'textfield',itemId:'login',title:'Login',region:'center',maxLength:15,minLength:3,fieldLabel:'Login',
 			scale:'medium',allowBlank: false},

@@ -1,6 +1,17 @@
+var mod={};
+module.exports.mod=function() {
+	mod.usereload=true;
+	global.app.mod['url']=mod;
+	return mod;
+}
 
-global.app.post('/auth',function (req,res) {
-	if(!req.body)res.sendStatus(400);
-	console.log(req.body);
-	res.sendStatus(200);
+app.get('/auth',function (req,res) {
+	//res.render('auth',data:{},errors:{})
 });
+app.post('auth',function(req,res) {
+	res.render('auth',{data:req.body,errors:{
+		message:{
+			msg:'mEssage'
+		}
+	}})
+})
