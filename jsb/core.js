@@ -18,6 +18,7 @@ var core={
 	http:require('http'),	
 	bodyParser:require('body-parser'),
 	static:require('node-static'),
-	ws:require('ws')
+	ws:require('ws'),
+	io:require('socket.io')
 }
 

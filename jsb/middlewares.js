@@ -5,7 +5,7 @@ app.set("views", app.core.path.join(base, "views"));
 
 app.use( app.core.express.static(app.core.path.join(base, "js")));
 app.use(app.core.express.static(base));
-console.log(base);
+
 app.disable('x-powered-by');
 app.set('views', app.core.path.join(base, 'views'));
 app.set('view engine', 'pug');

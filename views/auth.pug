@@ -1,7 +1,13 @@
 include layout/header.pug
 
 script.
+	var socket = io.connect('/');
+	/*socket.on('announcements', function(data) {
+		console.log('Client connected', data.message);
+	});
 	
+	*/
+
 	Ext.Loader.setConfig({
 	enabled:true,
 	disableCaching:false
@@ -15,7 +21,7 @@ script.
 		iconCls:'nav',centered:true,action:"/auth",
 		
 		items:[
-			{xtype:'textfield',itemId:'login',title:'Login',region:'center',maxLength:15,minLength:3,fieldLabel:'Login',
+			{xtype:'textfield',itemId:'login',title:'Login',region:'center',maxLength:15,minLength:3,fieldLabel:'Login',id:'login',
 			scale:'medium',allowBlank: false},
 
 			{xtype:'textfield',
@@ -29,13 +35,15 @@ script.
 			formBind: true, //only enabled once the form is valid
 			disabled: true,
 			handler:function(){
+				
 				panel.getForm().submit({
 					
 					success:function(form,action){
 						Ext.MessageBox.alert('Авторизация пройдена');	
 					},
 					 failure: function(form, action){ 
-						Ext.MessageBox.alert('Ошибка авторизации');
+						socket.emit('event', { message: Ext.getCmp('login').getValue()});
+						Ext.MessageBox.alert('Ошибка авторизации',Ext.getCmp('login').getValue());
 					}
 
 				});
