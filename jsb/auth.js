@@ -3,7 +3,7 @@ module.exports=
 	
 	exist:0,
 	CheckUser:function(login,password, callback){
-		var sequelize=global.app.mod['db'];
+		var sequelize=global.app.mod['db'].connection();
 		if(!sequelize)
 		{
 			console.log('Dont connect');

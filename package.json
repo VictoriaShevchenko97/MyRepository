@@ -7,20 +7,26 @@
     "dev": "nodemon app.js"
   },
   "dependencies": {
+    "bcrypt": "^3.0.2",
     "body-parser": "^1.18.3",
+    "connect-redis": "^3.4.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
+    "express-session": "^1.15.6",
     "ext": "^0.6.1",
     "extjs": "^0.1.0",
     "http-errors": "~1.6.2",
     "morgan": "~1.9.0",
     "mysql": "^2.16.0",
+    "mysql2": "^1.6.4",
     "node-extjs": "^1.0.1",
     "node-static": "^0.7.11",
     "nodemon": "^1.18.4",
     "pug": "^2.0.0-beta11",
+    "redis": "^2.8.0",
     "sencha-cmd": "^0.1.4",
+    "sequelize": "^4.41.2",
     "socket.io": "^2.1.1",
     "ws": "^6.1.0"
   }

@@ -10,12 +10,26 @@ require('./jsb/middlewares')(global.app,__dirname);
 require('./jsb/wsserver');
 
 app.get('/',function (req,res) {
-	res.render('auth');
+	if(!req.session.user){
+		req.session.user=0;}
+	
+		if(req.session.user==0){
+			res.render('auth');
+		}
+		else{
+			res.render('user');	
+	}
+	
 });
-app.get('/auth',function (req,res) {
-	res.render('auth');
-	// body...
-});
+app.post('/login',function(req,res){
+	req.session.user=req.body.username;
+	res.send({redirect:'/'});
+})
+app.post('/logout',function(req,res){
+	req.session.user=0;
+	res.redirect('/');
+})
+
 
 
 module.exports = {app};

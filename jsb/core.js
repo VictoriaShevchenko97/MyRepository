@@ -18,7 +18,12 @@ var core={
 	http:require('http'),	
 	bodyParser:require('body-parser'),
 	static:require('node-static'),
+	sequelize:require('sequelize'),
 	ws:require('ws'),
-	io:require('socket.io')
+	io:require('socket.io'),
+	session:require('express-session'),
+	redis:require('redis'),
+	crypt:require('bcrypt'),
+	connectredis:require('connect-redis')
 }
 
