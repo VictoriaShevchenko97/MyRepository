@@ -1,20 +1,24 @@
 include layout/header.pug
 
 script.
-	var socket = io.connect('/');
-	/*socket.on('announcements', function(data) {
-		console.log('Client connected', data.message);
+	var socket = io.connect('http://localhost:3000');
+	Ext.apply(Ext.form.field.VTypes, {
+	password: function (val, field) {
+		if (field.initialPassField) {
+			var pwd = Ext.getCmp(field.initialPassField);
+			return (val == pwd.getValue());
+		}
+		return true;
+	},
+	passwordText: 'Passwords do not match'
 	});
-	
-	*/
-
 	Ext.Loader.setConfig({
 	enabled:true,
 	disableCaching:false
 	});
 	Ext.require('Ext.window.MessageBox');
 	var panel=new Ext.form.Panel({
-		id:'panelId',renderTo:document.body,
+		id:'panelId',
 		title:'Autorization',bodyPadding:10,
 		resizable:false,width:'400px',
 		closable:false,modal:true,padding:10,
@@ -26,34 +30,129 @@ script.
 
 			{xtype:'textfield',
 			inputType:'password',
-			name:'password',
+			name:'password',id:'password',
 			fieldLabel:'Password',allowBlank: false}
 		],
-		buttons:[{
+		buttons:[
+		
+		{
 			text:'Send',
 			scope:this,
 			formBind: true, //only enabled once the form is valid
 			disabled: true,
 			handler:function(){
-				
-				panel.getForm().submit({
-					
-					success:function(form,action){
-						Ext.MessageBox.alert('Авторизация пройдена');	
-					},
-					 failure: function(form, action){ 
-						socket.emit('event', { message: Ext.getCmp('login').getValue()});
-						Ext.MessageBox.alert('Ошибка авторизации',Ext.getCmp('login').getValue());
-					}
+				socket.emit('event', { login: Ext.getCmp('login').getValue(),password: Ext.getCmp('password').getValue()});
+				socket.on('exist',function(data){
+				console.log(data);
+				if(data.message==0){Ext.MessageBox.alert('Message: ','Вы не зарегистрированы!');	}
+				else{
+				var data = {
+					'username':Ext.getCmp('login').getValue() 
+				};
 
+				$.ajax({
+					type: "POST",
+					url: '/login',
+					dataType: "json",
+					data:{username: Ext.getCmp('login').getValue()},
+					success: function(data, textStatus, jqXHR){
+					if(typeof data.redirect == 'string'){window.location = data.redirect;}}
 				});
-		}
+				//window.location.href='/';
+				}
+				});
+
+				}
+					
+			}
+		]
+	});
+	
+	var registr=new Ext.form.Panel({
+		id:'regId',
+		title:'Registration',bodyPadding:10,
+		resizable:false,width:'400px',
+		closable:false,modal:true,padding:10,
+		iconCls:'nav',centered:true,action:"/auth",
+		
+		items:[
+			{xtype:'textfield',itemId:'loginr',title:'Login',region:'center',maxLength:15,minLength:3,fieldLabel:'Login',id:'loginr',
+			scale:'medium',allowBlank: false},
+
+			{xtype:'textfield',
+			inputType:'password',
+			blankText:'Password is required',
+			name: 'pass',allowBlank: false,
+			id: 'pass',fieldLabel:'Password',
+			allowBlank: false,
+			listeners: {
+				change: function(field) 
+				{
+					var confirmField = field.up('form').down('[name=pass-cfrm]');
+					confirmField.validate();
+				}
+			}
+			},
+			{xtype:'textfield',
+			inputType:'password',
+			name: 'pass-cfrm',id:'rpassword',
+			fieldLabel:'Repeat password',
+			vtype: 'password',initialPassField: 'pass',
+			allowBlank: false}
+		],
+		buttons:[
+		
+		{
+			text:'Register',submit: 'onSubmit',
+			scope:this,
+			formBind: true, //only enabled once the form is valid
+			disabled: true,
+			handler:function(){
+				socket.emit('register', { login: Ext.getCmp('loginr').getValue(),password: Ext.getCmp('pass').getValue()});
+				
+				socket.on('succes_reg',function(data){
+					Ext.MessageBox.alert('Message: ',data.message);
+					$.ajax({
+					type: "POST",
+					url: '/login',
+					dataType: "json",
+					data:{username: Ext.getCmp('loginr').getValue()},
+					success: function(data, textStatus, jqXHR){
+					if(typeof data.redirect == 'string'){window.location = data.redirect;}}
+				});
+				})
+					
+			}
 		}]
 	});
-	Ext.getCmp('panelId').center();
+
+	
+
+	Ext.getBody().removeCls('x-nbr x-nlg');
+
+
+	Ext.create('Ext.tab.Panel', {
+	width: 400,border:false,
+	autoHeight:true,cls: 'navigationTabPanel',bodyCls: 'navigationTabPanelBody',
+	height: 300,id:'tab',activeTab:0,
+	plain:true,
+	renderTo: Ext.getBody(),
+	items: [{
+	title: 'Registration',
+	items:[registr]
+	}, {
+	title: 'Autorization',
+	items:[panel
+	]}
+	]});
+
+
+
+	Ext.getCmp('tab').center();
 	window.onresize=function(){
-	Ext.getCmp('panelId').center();
+	Ext.getCmp('tab').center();
 	}
+	
 blockcontent
 
 
