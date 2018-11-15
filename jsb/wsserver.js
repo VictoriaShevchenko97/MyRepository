@@ -1,8 +1,9 @@
 mod={};
 var io = app.core.io,
 	http=app.core.http,
-    server=http.Server(app),
-    io = io(server);
+    server=http.createServer(app),
+    io = io.listen(server);
+    global.io=io;
 /*############
 Server to CLIENT
 ############
@@ -31,12 +32,12 @@ io.on('connection', function(socket) {
         var reg=require(__dirname+'/register');
         var data_user=reg.CheckUser(data.login, function(){
             if(reg.exist==1){
-                socket.emit('exist',{message:'Логин занят!'});               
+                socket.emit('exist_r',{message:'Логин занят!'});               
             }
             else{
                 reg.Register(data.login, data.password,function(){
-                    socket.emit('succes_reg',{message:'Вы успешно зарегистрировались', id:reg.id});
-                });              
+                    socket.emit('reg_success',{id:reg.id});
+                });             
             }
         });
     })

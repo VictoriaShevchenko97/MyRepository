@@ -56,7 +56,10 @@ script.
 					dataType: "json",
 					data:{username: Ext.getCmp('login').getValue()},
 					success: function(data, textStatus, jqXHR){
-					if(typeof data.redirect == 'string'){window.location = data.redirect;}}
+					if(typeof data.redirect == 'string'){
+						window.location = data.redirect;
+					}
+					}
 				});
 				}
 				});
@@ -108,9 +111,10 @@ script.
 			disabled: true,
 			handler:function(){
 				socket.emit('register', { login: Ext.getCmp('loginr').getValue(),password: Ext.getCmp('pass').getValue()});
-				
-				socket.on('succes_reg',function(data){
-					Ext.MessageBox.alert('Message: ',data.message);
+				socket.on('exist_r',function(data){
+					Ext.MessageBox.alert('Message: ',data.message);})
+				socket.on('reg_success',function(data){
+					
 					$.ajax({
 					type: "POST",
 					url: '/login',
