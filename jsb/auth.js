@@ -29,17 +29,13 @@ module.exports=
 		{
 			if(c){
 				
-			console.log(bcrypt.compareSync(password, c.dataValues.password_hash));
-			
-				if(bcrypt.compareSync(password, c.dataValues.password_hash))
-				{
-					this.exist=login;
-					
-				}
+				
+				var hash=bcrypt.compareSync(password, c.dataValues.password_hash);
+				if(hash){this.exist=login;}
 				else{this.exist=0;}
+				callback();				
 			}
-			else{this.exist=0;}
-			callback();
+			
 		});
 		
 	},

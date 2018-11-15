@@ -18,6 +18,7 @@ io.on('connection', function(socket) {
     socket.on('event', function(data) {
     	var auth=require(__dirname+'/auth');
     	var data_user=auth.CheckUser(data.login, data.password,function(){
+            console.log(auth.exist);
     		if(auth.exist!=0){
                 socket.emit('exist',{message:auth.exist});
             }    

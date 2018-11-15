@@ -49,18 +49,18 @@ module.exports=
 			return 0;
 		}
 		var bcrypt=global.app.core.crypt;
-		bcrypt.hash('password',10,function(err,hash){
-			if(!err){
-				var query="INSERT INTO user (username, password_hash) VALUES (:login, :password)";
-				sequelize.query(query, { 
+		bcrypt.genSalt(10, (err, salt) => {
+	      bcrypt.hash(password, salt, (err, hash) => {
+          	sequelize.query("INSERT INTO user (username, password_hash) VALUES (:login, :password)", { 
 					replacements: {login:login,password:hash},
 					type: sequelize.QueryTypes.INSERT })
 					.then(function(projects) {
 						this.id=login;
 						cb();
 					});
-			}
-		});
+	    	});
+        });
+		
 		
 	}
 	

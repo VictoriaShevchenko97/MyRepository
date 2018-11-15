@@ -24,6 +24,7 @@ var core={
 	session:require('express-session'),
 	redis:require('redis'),
 	crypt:require('bcrypt'),
-	connectredis:require('connect-redis')
+	connectredis:require('connect-redis'),
+	mysql:require('mysql2')
 }
 
