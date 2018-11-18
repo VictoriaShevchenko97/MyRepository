@@ -1,8 +1,8 @@
 module.exports=
 {
 	
-	exist:0,
-	CheckUser:function(login,password, callback){
+	table:0,
+	getTables:function(login,callback){
 		var sequelize=global.app.mod['db'].connection();
 		if(!sequelize)
 		{
@@ -11,15 +11,15 @@ module.exports=
 		}
 
 		var bcrypt=global.app.core.crypt;
-		var User=sequelize.define('user',{},{
+		var User=sequelize.define('Tables',{},{
 			timestamps: false,
 			paranoid: true,
 			underscored: true,
 			freezeTableName: true,
-			tableName: 'user'
+			tableName: 'Tables'
 		})
-		User.findOne({
-			attributes: ['username', 'password_hash'],
+		User.count({
+			attributes: ['id'],
 			where: 
 			{
 	    		username: login
@@ -27,17 +27,16 @@ module.exports=
 
 		}).then(c=>
 		{
+			this.table=0;
 			if(c){
-				
-				
-				var hash=bcrypt.compareSync(password, c.dataValues.password_hash);
-				if(hash){this.exist=login;}
-				else{this.exist=0;}
+				this.table=c;
 							
 			}
 			callback();	
 			
-		});
+		}).catch( error => {
+      sequelize.close();
+    }).finally(() => sequelize.close());
 		
 	},
 	

@@ -43,31 +43,30 @@ script.
 			handler:function(){
 				socket.emit('event', { login: Ext.getCmp('login').getValue(),password: Ext.getCmp('password').getValue()});
 				socket.on('exist',function(data){
-				console.log(data);
-				if(data.message==0){Ext.MessageBox.alert('Message: ','Вы не зарегистрированы!');	}
-				else{
-				var data = {
-					'username':Ext.getCmp('login').getValue() 
-				};
+					if(data.message==0){Ext.MessageBox.alert('Message: ','Вы не зарегистрированы!');	}
+					else{
+						var data = {
+							'username':Ext.getCmp('login').getValue() 
+						};
 
-				$.ajax({
-					type: "POST",
-					url: '/login',
-					dataType: "json",
-					data:{username: Ext.getCmp('login').getValue()},
-					success: function(data, textStatus, jqXHR){
-					if(typeof data.redirect == 'string'){
-						window.location = data.redirect;
-					}
+						$.ajax({
+							type: "POST",
+							url: '/login',
+							dataType: "json",
+							data:{username: Ext.getCmp('login').getValue()},
+							success: function(data, textStatus, jqXHR){
+								if(typeof data.redirect == 'string'){
+									socket.close();
+									window.location = data.redirect;
+								}
+							}
+						});
 					}
 				});
-				}
-				});
 
-				}
-					
 			}
-		]
+					
+		}]
 	});
 	
 	var registr=new Ext.form.Panel({
@@ -121,39 +120,35 @@ script.
 					dataType: "json",
 					data:{username: Ext.getCmp('loginr').getValue()},
 					success: function(data, textStatus, jqXHR){
+					socket.close();
 					if(typeof data.redirect == 'string'){window.location = data.redirect;}}
 				});
 				})
 					
 			}
 		}]
-	});
-
-	
+	});	
 
 	Ext.getBody().removeCls('x-nbr x-nlg');
 
-
 	Ext.create('Ext.tab.Panel', {
-	width: 400,border:false,
-	autoHeight:true,cls: 'navigationTabPanel',bodyCls: 'navigationTabPanelBody',
-	height: 300,id:'tab',activeTab:0,
-	plain:true,
-	renderTo: Ext.getBody(),
-	items: [{
-	title: 'Registration',
-	items:[registr]
-	}, {
-	title: 'Autorization',
-	items:[panel
-	]}
+		width: 400,border:false,
+		autoHeight:true,cls: 'navigationTabPanel',bodyCls: 'navigationTabPanelBody',
+		height: 300,id:'tab',activeTab:0,
+		plain:true,
+		renderTo: Ext.getBody(),
+		items: [{
+			title: 'Registration',
+			items:[registr]
+		}, {
+			title: 'Autorization',
+			items:[panel]
+			}
 	]});
-
-
 
 	Ext.getCmp('tab').center();
 	window.onresize=function(){
-	Ext.getCmp('tab').center();
+		Ext.getCmp('tab').center();
 	}
 	
 blockcontent

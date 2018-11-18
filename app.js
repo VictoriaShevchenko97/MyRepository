@@ -17,8 +17,8 @@ app.get('/',function (req,res) {
 			res.render('auth');
 		}
 		else{
-			res.render('user');	
-	}
+			res.render('user',{login:req.session.user});
+			}
 	
 });
 app.post('/login',function(req,res){

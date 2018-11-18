@@ -41,6 +41,23 @@ io.on('connection', function(socket) {
                 });             
             }
         });
+    });
+    socket.on('add_new_table',function(data){
+       var add_table=require(__dirname+'/add_table');
+        add_table.CheckTable(data.username,data.tableName, function(){
+            if(add_table.exist==1){
+                console.log('exist');   
+                socket.emit('exist_t',{message:'Table already exist!'});               
+            }
+            else{
+               socket.emit('added_table');           
+            }
+        }); 
+    });
+    socket.on('delete_all',function(data){
+       require(__dirname+'/deleteAllTables').DeleteAll(data.login,function(){
+            socket.emit('deleted_all');
+       });
     })
 });
 server.listen(3000);
