@@ -5,140 +5,14 @@ block append content
 		var socket = io.connect('http://localhost:3000');
 		var login='#{login}';
 		Ext.onReady(function(){
-			var Menu1=Ext.create('Ext.menu.Menu', {
-				width:'100%',
-				floating: false,
-				plain:true,
-				border:0,
-				items: [{
-					xtype:'button',
-					text: 'Show tables'
-				},
-				{
-					xtype:'button',
-					text: 'Add table',
-					handler:function(){
-						if(win){
-							win.show();
-						}
-						else{
-							Ext.define('innerWindow',{
-
-								extend: 'Ext.window.Window',
-								title: 'Add new table',
-								height: 100,
-								width: 350, 
-								modal: true,
-								items: [{
-									xtype: 'form',
-									items: [
-									{
-
-										xtype: 'textfield',labelWidth: '300px',minLength:3,blankText:'Table name cannot be less 3 symbols',fieldLabelTip: 'Saksnummer',
-										fieldLabel: 'Name for table',allowBlank: false,
-										id: 'new_table'
-									}],
-									fbar: [
-									{
-										
-										id: 'newTableName',
-										
-										text: 'Input name your table',
-										
-									},'->',{
-										xtype:'button',
-										text: 'Submit',
-										formBind: true,
-										itemId: 'submit',disabled: true,
-										handler:function(){
-											socket.emit('add_new_table',{username: login,tableName:Ext.getCmp('new_table').getValue()});
-											socket.on('exist_t',function(data){
-												Ext.getCmp('newTableName').setText(data.message);
-											});	
-											socket.on('added_table',function(data){
-												
-												/*win.getEl().fadeOut({
-													easing: 'easeOut',
-													endOpacity: 0,
-													duration: 300,
-													useDisplay: false
-												});
-												setTimeout(function(){},300);*/
-												win.close();
-											});	
-										}
-									}]
-								}]
-							});
-							var win = Ext.create('innerWindow');
-							win.show();
-						}
-					}
-				},{
-					xtype:'button',
-					text: 'Delete all tables',
-					handler:function(){
-						Ext.MessageBox.confirm('Delete', 'Are you sure ?', function(btn){
-							if(btn === 'yes'){
-								socket.emit('delete_all',{login:login});
-								socket.on('deleted_all',function(){
-									this.getEl().fadeOut({
-										easing: 'easeOut',
-										endOpacity: 0,
-										duration: 300,
-										useDisplay: false
-									});
-									setTimeout(function(){this.close()},300);
-								}
-								);
-							}
-							else{
-								this.close();
-							}
-						});
-					}
-				},
-				{
-					xtype:'button',
-					text: 'Not done task'
-				},{
-					xtype:'button',
-					text: 'Statistic'
-				},{
-					xtype:'button',
-					text: 'Profile'
-				}]
-			});
-			var menu_panel=Ext.create('Ext.panel.Panel',{
-				width: '100%',
-				id:'menu_panel',border:0,
-				height:500,
-				title:'<div style="display:flex;align-items:center;justify-content:space-between">Task Manager for '+login+'<span style="text-align:right;">You have: #{count} tables</span><form method="POST" action="/logout" class="pull-right"><button class="btn btn-sm btn-primary" type="submit", id="logout"> Logout</button></form></div>',
-				layout: 'hbox',
-				items: [{
-					layout:'vbox',
-					border:'none',
-					flex:1,border:0,
-					frame:false,
-					items:[Menu1,form1],
-					minWidth:150,
-					maxWidth:400,
-					unstyled: true
-				},{
-					title: 'Center Region',
-					flex:3,     // center region is required, no width/height specified
-					xtype: 'container',
-					layout:'fit',
-					
-					items:[{border:0,
-						layout: 'fit',
-						xtype:'panel',
-						html:'kdkjk'
-					}]
-					
-				}],
+			Ext.state.Manager.setProvider(new Ext.state.LocalStorageProvider({expires: 'never'}));
+			Ext.defaultFormat='dd.mm.YYYY';
+			Ext.create('Ext.Container',{
+			renderTo:'rootmain', id:'main',flex:1,defaults:{layout:{type:'vbox',align:'stretch'}},layout:{type:'vbox',align:'stretch'},
+			border:false,width:$('#rootmain').width(),height:$('#rootmain').height(),
+			items:[
+				{xtype:'panel',title:'TaskManager for #{login}',flex:1,id:'adm_bosa',
 				tools: [
-
 					{
 						type: 'help',
 						handler: function(event, toolEl, panel)
@@ -153,25 +27,106 @@ block append content
 
 							}).show();}
 						}
-					},{
+					}
+				],
+				dockedItems:[
+					{xtype:'toolbar',scrollable:'y',border:false,dock:'left',defaults:{layout:{type:'hbox',align:'left'},xtype:'button',textAlign:'left',scale:'medium'},
+					items:[
+						{text:"Add table",cls:'menu_button',iconCls:'material-icons md-24 lightred',glyph:'xe89c',handler:function() {
+							if(win){
+								win.show();
+							}
+							else{
+								Ext.define('innerWindow',{
 
-					}
-				]
+									extend: 'Ext.window.Window',
+									title: 'Add new table',
+									height: 100,
+									width: 350, 
+									modal: true,
+									items: [{
+										xtype: 'form',
+										items: [
+										{
+
+											xtype: 'textfield',labelWidth: '300px',minLength:3,blankText:'Table name cannot be less 3 symbols',fieldLabelTip: 'Saksnummer',
+											fieldLabel: 'Name for table',allowBlank: false,
+											id: 'new_table'
+										}],
+										fbar: [
+										{
+											
+											id: 'newTableName',
+											
+											text: 'Input name your table',
+											
+										},'->',{
+											xtype:'button',
+											text: 'Submit',
+											formBind: true,
+											itemId: 'submit',disabled: true,
+											handler:function(){
+												socket.emit('add_new_table',{username: login,tableName:Ext.getCmp('new_table').getValue()});
+												socket.on('exist_t',function(data){
+													Ext.getCmp('newTableName').setText(data.message);
+												});	
+												socket.on('added_table',function(data){
+													win.close();
+												});	
+											}
+										}]
+									}]
+								});
+								var win = Ext.create('innerWindow');
+								win.show();
+							}
+						}},
+						{text:"Delete all tables",cls:'menu_button',iconCls:'material-icons md-24 lightred',glyph:'xe92b',handler:function() { 
+							Ext.MessageBox.show({
+								title: 'Icon Support',
+								itemId:'warning',
+								msg: 'Are you sure you want to proceed?',
+								buttons: Ext.MessageBox.OKCANCEL,
+								icon: Ext.MessageBox.WARNING,
+								fn: function(btn){
+									if(btn == 'ok'){
+										socket.emit('delete_all',{login:login});
+										socket.on('deleted_all',function(){
+											Ext.getCmp('warning').getEl().close();
+										});
+									} else {
+										Ext.getCmp('warning').getEl().close();
+									}
+								}
+							});							
+						}},
+						
+						{text:"Statistic",iconCls:'material-icons md-24 lightred',glyph:'xe6e1',cls:'menu_button',handler:function(){}},
+						{text:'Contacts',iconCls:'material-icons md-24 lightred',glyph:'xe80d',cls:'menu_button'},
+						{text:"Logout",iconCls:'material-icons md-24 lightred',cls:'menu_button',glyph:'xe5c9',tooltip:"Logout",
+							handler:function(){
+								$.ajax({
+									type: "POST",
+									url: '/logout',
+									dataType: "json",
+									data:{username: login},
+									success: function(data, textStatus, jqXHR){
+										if(typeof data.redirect == 'string'){
+											
+											window.location = data.redirect;
+										}
+									}
+								});
+							}
+						}
+					]}
+				]}
+			]});
+			$(window).resize(function() {
+				if (Ext.getCmp('main')) {
+					Ext.getCmp('main').setHeight($('#rootmain').height());
+					Ext.getCmp('main').setWidth($('#rootmain').width());
+				}
 			});
-			var form1 = Ext.create('Ext.form.Panel', {
-				floating: false,
-				items: [
-					{
-						xtype: 'textfield',
-						name: 'name',
-						label: 'Name'
-					}
-				]
-			});
-			
-			Ext.create('Ext.container.Viewport',{
-			
-				items:[menu_panel]
-			});
-		})
-			
+		});
+div(id="rootmain" style="width:100%;")

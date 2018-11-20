@@ -13,7 +13,7 @@ app.set('dir_public', base);
 app.use(app.core.bodyParser.urlencoded({limit: '25mb', extended: false }));
 app.set('trust proxy', 1) // trust first proxy
 
-
+console.log('test');
 redis=app.core.redis.createClient();
 redis.on('connect', function() {
     console.log('Redis client connected');

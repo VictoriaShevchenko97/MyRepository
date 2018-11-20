@@ -39,8 +39,7 @@ module.exports=
 				});
 			}
 			Table.destroy({
-					where: {username:login},
-					truncate: true
+					where: {username:login}
 				}).then(()=>
 				{
 					callback();		
